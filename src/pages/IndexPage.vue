@@ -7,7 +7,10 @@
       @updateFlags="updateFlags"
       @updateRaw="updateSyntax"
     />
-    <p v-if="syntax.length">Regex Syntax: {{ syntax }} {{ syntax.length }}</p>
+    <!-- Show Syntax only when valid -->
+    <p class="text-body1 text-mute" v-if="syntax.length">
+      Regexp Syntax: {{ syntax }}
+    </p>
   </q-page>
 </template>
 

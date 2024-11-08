@@ -1,5 +1,4 @@
 <template>
-  <p>{{ regexEngines }}</p>
   <div class="q-gutter-sm">
     <q-radio v-model="regexEngines" val="pcre" label="PCRE" />
     <q-radio v-model="regexEngines" val="re2js" label="RE2JS" />
@@ -19,8 +18,7 @@
     hide-bottom-space
   >
     <template #prepend>
-      <!-- <Icon name="outlinedRegularExpression" size="sm" /> -->
-      <p>Icon</p>
+      <IconRegex stroke={2} />
     </template>
     <template #append>
       <div class="cursor-pointer">
@@ -62,6 +60,7 @@
 </template>
 
 <script setup lang="ts">
+import { IconRegex } from '@tabler/icons-vue';
 import { ref, reactive, computed, useTemplateRef, watch } from 'vue';
 import { RE2JS } from 're2js';
 
@@ -80,11 +79,14 @@ const props = defineProps<{
 
 const cpPattern = defineModel<string>();
 
-const regexEngines = ref('pcre');
+//RegexEngine can either
+const regexEngines = ref<'pcre' | 're2js'>('pcre');
+
 const flagsChecked = reactive({
   multiline: Boolean(props.flags?.indexOf('m') > -1),
   caseInsensitive: Boolean(props.flags?.indexOf('i') > -1),
 });
+
 
 const thisFlags = computed(() => {
   let flags = '';
@@ -99,8 +101,7 @@ const thisFlags = computed(() => {
   return flags;
 });
 
-
-//Validate Regex dependng on regex engine
+//Validate Regex depending on regex engine
 const validateRegex = () => {
   if (regexEngines.value === 're2js') {
     try {
@@ -120,7 +121,7 @@ const validateRegex = () => {
   }
 };
 
-
+//handling and emiting regex syntax
 const handleValidation = () => {
   isValid.value = true;
   const isValidRegex = validateRegex();
@@ -132,7 +133,6 @@ const handleValidation = () => {
   const validRegex = new RegExp(String(cpPattern.value), thisFlags.value);
   emits('updateRaw', validRegex.toString());
 };
-
 
 const updateFlags = () => {
   emits('updateFlags', thisFlags.value);
